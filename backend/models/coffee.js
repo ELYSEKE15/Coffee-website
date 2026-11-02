@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 
-// Only pictures from our own /images folder are allowed
 const okImage = (v) =>
-  v === "" || (/^\/images\/[\w\-. ()\/]+\.(jpg|jpeg|png|webp)$/i.test(v) && !v.includes(".."));
+  v === "" ||
+  /^\/api\/coffee\/[a-f0-9]{24}\/image(\?v=\d+)?$/.test(v) ||
+  (/^\/images\/[\w\-. ()\/]+\.(jpg|jpeg|png|webp)$/i.test(v) && !v.includes(".."));
 
 const coffeeSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },

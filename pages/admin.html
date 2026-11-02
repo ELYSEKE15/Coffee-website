@@ -86,8 +86,12 @@
                                 <option>Bakery</option>
                             </select>
                         </div>
-                        <div><label for="m-image">Photo path</label>
-                            <input id="m-image" placeholder="/images/menu/espresso.jpg" type="text"></div>
+                        <div>
+                            <label for="m-file">Photo</label>
+                            <input id="m-file" type="file" accept="image/*">
+                            <input id="m-image" type="hidden">
+                            <img id="m-preview" alt="" width="100" hidden>
+                        </div>
                     </div>
                     <label for="m-desc">Description</label>
                     <input id="m-desc" maxlength="120">
