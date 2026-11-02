@@ -40,8 +40,29 @@ async function api(url, method = "GET", body) {
     return data;
 }
 
+// ---------- show / hide password ----------
+function hidePassword() {
+    $("#password").type = "password";
+    const btn = $("#toggle-pass");
+    btn.textContent = "Show";
+    btn.setAttribute("aria-label", "Show password");
+    btn.setAttribute("aria-pressed", "false");
+}
+
+$("#toggle-pass").addEventListener("click", () => {
+    const input = $("#password");
+    const show = input.type === "password";
+    input.type = show ? "text" : "password";
+    const btn = $("#toggle-pass");
+    btn.textContent = show ? "Hide" : "Show";
+    btn.setAttribute("aria-label", show ? "Hide password" : "Show password");
+    btn.setAttribute("aria-pressed", String(show));
+    input.focus();
+});
+
 // ---------- login / logout ----------
-function showLogin() { $("#app").hidden = true; $("#login").hidden = false; }
+// The password always goes back to hidden when the login screen appears.
+function showLogin() { hidePassword(); $("#app").hidden = true; $("#login").hidden = false; }
 
 function showApp() {
     $("#login").hidden = true;

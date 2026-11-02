@@ -296,3 +296,15 @@ select:focus {
 .a-toast.bad {
     background: #b3261e;
 }
+.a-pass { position: relative; }
+.a-pass input { width: 100%; box-sizing: border-box; padding-right: 4.5rem; }
+.a-eye {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font-weight: 600;
+}

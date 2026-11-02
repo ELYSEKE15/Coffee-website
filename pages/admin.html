@@ -16,7 +16,11 @@
             <img src="/images/logo.png" alt="" height="70">
             <h1>Admin login</h1>
             <label for="password">Password</label>
-            <input id="password" type="password" autocomplete="current-password" required>
+            <div class="a-pass">
+                <input id="password" type="password" autocomplete="current-password" required>
+                <button type="button" class="a-eye" id="toggle-pass"
+                        aria-label="Show password" aria-pressed="false">Show</button>
+            </div>
             <button type="submit" class="a-btn">LOG IN</button>
             <p class="a-error" id="login-msg" role="alert"></p>
         </form>
