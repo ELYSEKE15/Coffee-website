@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Online - Bourbon St. Cafe</title>
+  <link rel="stylesheet" href="/styles/style.css">
+  <link rel="stylesheet" href="/styles/order.css">
+  <link rel="icon" type="image/png" href="/images/logo.png">
+</head>
+<body>
+  <header class="o-top">
+    <a href="/"><img src="/images/logo.png" alt="Bourbon St. Cafe" height="60"></a>
+    <a class="o-back" href="/">← Back to home</a>
+  </header>
+
+  <section class="o-hero">
+    <p class="o-kicker">ORDER ONLINE</p>
+    <h1>Fresh coffee, ready when you arrive.</h1>
+    <p>Choose your favourites and we will prepare them for pickup.</p>
+  </section>
+
+  <main class="o-wrap">
+    <section aria-label="Menu">
+      <div class="o-tabs" id="tabs"></div>
+      <div class="o-grid" id="items"><p>Loading menu...</p></div>
+    </section>
+
+    <aside class="o-cart" id="cart" aria-label="Your order">
+      <div id="cart-body">
+        <h2>Your order <span id="count"></span></h2>
+        <div id="lines"></div>
+        <p class="o-total"><span>Total</span> <strong id="total">$0.00</strong></p>
+
+        <form id="order-form" novalidate>
+          <label for="name">Your name</label>
+          <input id="name" type="text" maxlength="60" autocomplete="name" placeholder="e.g. Aline" required>
+          <label for="phone">Phone number</label>
+          <input id="phone" type="tel" maxlength="16" autocomplete="tel" placeholder="+250788123456" required>
+          <label for="note">Note (optional)</label>
+          <textarea id="note" maxlength="200" rows="2" placeholder="Less sugar, extra hot..."></textarea>
+          <button type="submit" class="o-place" id="send">PLACE ORDER</button>
+          <p class="o-msg" id="msg" role="status"></p>
+        </form>
+      </div>
+
+      <div class="o-done" id="done" hidden>
+        <div class="o-check" aria-hidden="true">✓</div>
+        <h2>Thank you!</h2>
+        <p id="done-text"></p>
+        <button type="button" class="o-again" id="again">ORDER AGAIN</button>
+      </div>
+    </aside>
+  </main>
+
+  <a class="o-fab" id="fab" href="#cart" hidden></a>
+  <script src="/javascript/order.js" defer></script>
+</body>
+</html>

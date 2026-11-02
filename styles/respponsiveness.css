@@ -1,0 +1,252 @@
+
+/* ---------- Small laptops and tablets (1100px and below) ---------- */
+@media (max-width: 1100px) {
+    .about {
+        gap: 40px;
+    }
+
+    .about-img {
+        padding-left: 30px;
+    }
+
+    .about-img img {
+        width: 380px;
+        height: 360px;
+    }
+
+    .about-content {
+        padding-right: 30px;
+    }
+
+    /* footer columns wrap in a grid instead of one cramped row */
+    .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 24px 30px;
+    }
+
+    .footer-line {
+        display: none;
+    }
+
+    .content3,
+    .content4,
+    .content5 {
+        max-width: none;
+    }
+}
+
+/* ---------- Mobile menu + stacked layout (900px and below) ---------- */
+@media (max-width: 900px) {
+    header {
+        padding: 10px 20px;
+    }
+
+    .logo {
+        margin-right: auto;
+    }
+
+    .logo img {
+        height: 64px;
+    }
+
+    .btn-header {
+        order: 2;
+        width: auto;
+        padding: 10px 16px;
+    }
+
+    nav {
+        order: 3;
+    }
+
+    .menu-toggle {
+        display: block;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        padding: 8px 20px 16px;
+        background: hsl(0, 17%, 13%);
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links a {
+        padding: 14px 4px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-links a[aria-current="page"]::after {
+        left: 4px;
+        transform: none;
+    }
+
+    .about {
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        text-align: center;
+    }
+
+    .about-img {
+        width: 100%;
+        max-width: 520px;
+        padding: 20px 20px 0;
+    }
+
+    .about-img img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4 / 3;
+    }
+
+    .about-content {
+        padding: 0 24px;
+    }
+
+    .a-lines,
+    .icons {
+        justify-content: center;
+    }
+
+    .logos {
+        row-gap: 24px;
+        padding: 40px 20px;
+    }
+
+    .logos-line {
+        display: none;
+    }
+
+    .in {
+        flex: 1 1 40%;
+    }
+}
+
+/* ---------- Phones (600px and below) ---------- */
+@media (max-width: 600px) {
+    .btn-header {
+        padding: 9px 12px;
+        font-size: 0.8rem;
+    }
+
+    /* stronger dark layer so text stays readable over the photo */
+    .all {
+        background:
+            linear-gradient(rgba(20, 15, 10, 0.85), rgba(20, 15, 10, 0.85)),
+            url("/images/coffee.jpg") center / cover no-repeat;
+    }
+
+    .hero {
+        align-items: center;
+        max-width: 100%;
+        min-height: 0;
+        padding: 40px 20px 60px;
+        text-align: center;
+    }
+
+    .hero .under br,
+    #paragraphy br {
+        display: none;
+    }
+
+    /* let the text flow naturally */
+
+    .buttons {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        max-width: 320px;
+    }
+
+    .btn1,
+    .btn2 {
+        width: 100%;
+    }
+
+    .in {
+        flex-basis: 100%;
+    }
+
+    .cards,
+    .guests-card {
+        grid-template-columns: 1fr;
+    }
+
+    .about-imgs img {
+        flex-basis: calc(50% - 10px);
+    }
+
+    .guest-page {
+        padding: 30px 16px;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        padding: 30px 20px;
+        text-align: center;
+    }
+
+    .content1,
+    .content2,
+    .content3,
+    .content4,
+    .content5 {
+        align-items: center;
+    }
+
+    .content2 ul {
+        align-items: center;
+    }
+
+    .h2r {
+        align-items: center;
+    }
+
+    .platform {
+        justify-content: center;
+    }
+
+    .h-line {
+        margin-inline: auto;
+    }
+
+    .long {
+        margin: 12px 20px;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px 20px 24px;
+        text-align: center;
+    }
+}
+
+/* ---------- Respect "reduce motion" settings ---------- */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Admin - Bourbon St. Cafe</title>
+    <link rel="stylesheet" href="/styles/admin.css">
+    <link rel="icon" type="image/png" href="/images/logo.png">
+</head>
+
+<body>
+    <section class="a-login" id="login" hidden>
+        <form class="a-card" id="login-form">
+            <img src="/images/logo.png" alt="" height="70">
+            <h1>Admin login</h1>
+            <label for="password">Password</label>
+            <input id="password" type="password" autocomplete="current-password" required>
+            <button type="submit" class="a-btn">LOG IN</button>
+            <p class="a-error" id="login-msg" role="alert"></p>
+        </form>
+    </section>
+
+    <div id="app" hidden>
+        <header class="a-bar">
+            <strong>Bourbon St. Cafe · Admin</strong>
+            <nav class="a-nav">
+                <button type="button" class="a-tab" data-tab="dash">Dashboard</button>
+                <button type="button" class="a-tab" data-tab="orders">Orders</button>
+                <button type="button" class="a-tab" data-tab="menu">Menu</button>
+            </nav>
+            <button type="button" class="a-out" id="logout">Log out</button>
+        </header>
+
+        <main class="a-main">
+            <section class="a-sec" id="tab-dash">
+                <h2>Dashboard</h2>
+                <div class="a-stats" id="stats"></div>
+            </section>
+
+            <section class="a-sec" id="tab-orders" hidden>
+                <div class="a-row">
+                    <h2>Orders</h2>
+                    <select id="filter" aria-label="Filter by status">
+                        <option value="">All orders</option>
+                        <option value="new">New</option>
+                        <option value="preparing">Preparing</option>
+                        <option value="ready">Ready</option>
+                        <option value="done">Done</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="a-scroll">
+                    <table class="a-table">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Time</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="a-sec" id="tab-menu" hidden>
+                <h2>Menu</h2>
+                <form class="a-card a-form" id="menu-form">
+                    <h3 id="form-title">Add a new item</h3>
+                    <div class="a-grid">
+                        <div><label for="m-name">Name</label><input id="m-name" maxlength="60" required></div>
+                        <div><label for="m-price">Price (RWF)</label><input id="m-price" type="number" min="0" step="50" required></div>
+                        <div><label for="m-cat">Category</label>
+                            <select id="m-cat">
+                                <option>Drinks</option>
+                                <option>Food</option>
+                                <option>Bakery</option>
+                            </select>
+                        </div>
+                        <div><label for="m-image">Photo path</label>
+                            <input id="m-image" placeholder="/images/menu/espresso.jpg" type="text"></div>
+                    </div>
+                    <label for="m-desc">Description</label>
+                    <input id="m-desc" maxlength="120">
+                    <div class="a-row">
+                        <button type="submit" class="a-btn" id="m-save">ADD ITEM</button>
+                        <button type="button" class="a-ghost" id="m-cancel" hidden>Cancel</button>
+                    </div>
+                </form>
+                <div class="a-scroll">
+                    <table class="a-table">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="menu"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="a-toast" id="toast" role="status" hidden></div>
+    <script src="/javascript/admin.js" defer></script>
+</body>
+
+</html>

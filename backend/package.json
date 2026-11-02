@@ -1,0 +1,22 @@
+{
+  "name": "coffe-wb",
+  "version": "1.0.0",
+  "description": "Bourbon St. Cafe website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node seeds.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.3.1",
+    "dotenv": "^18.0.5",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.0.0",
+    "helmet": "^8.0.0",
+    "mongoose": "^9.10.3"
+  }
+}
