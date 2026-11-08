@@ -987,3 +987,75 @@ button.menu-btn {
     border: 0;
     cursor: pointer;
 }
+
+/* loader */
+
+/* Coffee Cup Loader Animation */
+.coffee-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 20px;
+    grid-column: 1 / -1;
+    width: 100%;
+    color: hsl(36, 48%, 56%);
+    font-weight: 600;
+    font-family: var(--font-body);
+}
+
+.coffee-cup {
+    width: 44px;
+    height: 36px;
+    border: 3px solid currentColor;
+    border-top: none;
+    border-radius: 0 0 20px 20px;
+    position: relative;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    animation: pulse-cup 1.4s infinite ease-in-out;
+}
+
+.coffee-cup::after {
+    content: '';
+    position: absolute;
+    right: -12px;
+    top: 4px;
+    width: 10px;
+    height: 18px;
+    border: 3px solid currentColor;
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+}
+
+.coffee-steam {
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 5px;
+}
+
+.coffee-steam span {
+    display: block;
+    width: 3px;
+    height: 10px;
+    background: currentColor;
+    border-radius: 2px;
+    animation: steam 1.2s infinite ease-in-out;
+}
+
+.coffee-steam span:nth-child(2) { animation-delay: 0.4s; }
+.coffee-steam span:nth-child(3) { animation-delay: 0.8s; }
+
+@keyframes steam {
+    0% { transform: translateY(6px); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-8px); opacity: 0; }
+}
+
+@keyframes pulse-cup {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+}
