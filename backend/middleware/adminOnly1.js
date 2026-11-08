@@ -3,10 +3,21 @@ const crypto = require("crypto");
 const sessions = new Map(); // login token -> time it expires (lost when the server restarts)
 const HOURS = 8;
 
+// every 10 minutes, forget sessions that have already expired
+setInterval(() => {
+  const now = Date.now();
+  for (const [token, expires] of sessions) if (expires < now) sessions.delete(token);
+}, 10 * 60 * 1000).unref(); // unref: this timer never keeps the server alive on its own
+
 function readCookie(req, name) {
   const found = (req.headers.cookie || "").split(";").map((s) => s.trim())
     .find((s) => s.startsWith(name + "="));
-  return found ? decodeURIComponent(found.slice(name.length + 1)) : "";
+  if (!found) return "";
+  try {
+    return decodeURIComponent(found.slice(name.length + 1));
+  } catch {
+    return ""; // a broken cookie just means "not logged in"
+  }
 }
 
 // timingSafeEqual compares without leaking how many characters matched
@@ -38,8 +49,8 @@ function login(req, res) {
   const token = crypto.randomBytes(32).toString("hex");
   sessions.set(token, Date.now() + HOURS * 3600 * 1000);
   res.cookie("admin", token, {
-    httpOnly: true,            
-    sameSite: "strict",       
+    httpOnly: true,            // JavaScript on the page cannot read this cookie
+    sameSite: "strict",        // other websites cannot make the browser send it
     secure: process.env.NODE_ENV === "production",
     maxAge: HOURS * 3600 * 1000,
   });

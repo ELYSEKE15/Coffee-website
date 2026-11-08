@@ -5,11 +5,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Bourbon St. Cafe - locally roasted coffee and made-from-scratch food.">
+    <meta name="theme-color" content="#1a1512">
+
+    <!-- Preview card when the link is shared (WhatsApp, Facebook, etc.) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Bourbon St. Cafe">
+    <meta property="og:description" content="Locally roasted coffee and made-from-scratch food. Order ahead and skip the line.">
+    <meta property="og:image" content="https://bourbon-st-cafe.onrender.com/images/logo.png">
+
     <title>Bourbon St. Cafe</title>
+
+    <!-- Fonts: Fraunces (headings) and Figtree (text). These match --font-heading and --font-body in style.css -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Fraunces:wght@400;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="/vendor/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="/styles/style.css">
     <link rel="stylesheet" href="/styles/respponsiveness.css">
+    <link rel="stylesheet" href="/styles/extras.css">
     <link rel="icon" type="image/png" sizes="32x32" href="/images/logo.png">
+    <link rel="apple-touch-icon" href="/images/logo.png">
 </head>
 
 <body>
@@ -25,8 +41,8 @@
                     <li><a href="#Menu">MENU</a></li>
                     <li><a href="#About">ABOUT</a></li>
                     <li><a href="#Locations">LOCATIONS</a></li>
-                    <li><a href="#Contact">CATERING</a></li>
-                    <li><a href="#Blog">BLOG</a></li>
+                    <li><a href="/catering.html">CATERING</a></li>
+                    <li><a href="/blog.html">BLOG</a></li>
                     <li><a href="#Contact">CONTACT</a></li>
                 </ul>
             </nav>
@@ -54,7 +70,7 @@
     </div>
     <div class="about" id="About">
         <div class="about-img">
-            <img src="/images/coo.jpg" alt="" loading="lazy">
+            <img src="/images/coo.jpg" alt="Inside Bourbon St. Cafe" loading="lazy">
         </div>
         <div class="about-content">
             <p>WELCOME TO BOURBON ST. CAFE</p>
@@ -85,6 +101,8 @@
             <a class="btn-about" href="#">LEARN MORE ABOUT US</a>
         </div>
     </div>
+
+    <!-- The menu cards are made by script.js from /api/coffee, so prices always match the order page -->
     <div class="menu" id="Menu">
         <h6>OUR MENU</h6>
         <h3>Fresh Favorites, Made Daily</h3>
@@ -93,107 +111,12 @@
             <img src="/images/plant.png" alt="">
             <hr class="a-sline">
         </div>
-        <div class="cards">
-            <div class="container">
-                <div class="c-img">
-                    <img src="/images/cup.jpg" alt="Vanilla latte" loading="lazy">
-                </div>
-                <div class="c-content">
-                    <h6>Vanilla Latte</h6>
-                    <p>Smooth espresso with<br>
-                        vanilla &amp; steamed milk.
-                    </p>
-                    <p class="pay">$4.75</p>
-                </div>
-            </div>
-            <div class="container">
-                <div class="c-img">
-                    <img src="/images/Avocado Toast with Fried Eggs.jpg" alt="Avocado toast" loading="lazy">
-                </div>
-                <div class="c-content">
-                    <h6>Avocado Toast</h6>
-                    <p>Sourdough, smashed avocado,<br>
-                        chili flakes, microgreens.
-                    </p>
-                    <p class="pay">$9.50</p>
-                </div>
-            </div>
-            <div class="container">
-                <div class="c-img">
-                    <img src="/images/bluebully.jpg" alt="Blueberry Muffin" loading="lazy">
-                </div>
-                <div class="c-content">
-                    <h6>Blueberry Muffin</h6>
-                    <p>Moist &amp; fluffy, filled with<br>
-                        juicy blueberries.
-                    </p>
-                    <p class="pay">$3.25</p>
-                </div>
-            </div>
-            <div class="container">
-                <div class="c-img">
-                    <img src="/images/Healthy Grain Bowl Ideas.jpg" alt="Grain Bowl" loading="lazy">
-                </div>
-                <div class="c-content">
-                    <h6>Grain Bowl</h6>
-                    <p>Quinoa, roasted veggies,<br>
-                        feta, tahini dressing.
-                    </p>
-                    <p class="pay">$11.50</p>
-                </div>
-            </div>
-
-            <div class="container extra" hidden>
-                <div class="c-img">
-                    <img src="/images/cuup.jpg" alt="Cappuccino" loading="lazy">
-                </div>
-                <div class="c-content">
-                    <h6>Cappuccino</h6>
-                    <p>Rich espresso with<br>
-                        velvety milk foam.
-                    </p>
-                    <p class="pay">$4.25</p>
-                </div>
-            </div>
-            <div class="container extra" hidden>
-                <div class="c-img">
-                    <img src="/images/bluebully.jpg" alt="Butter Croissant" loading="lazy">
-                </div>
-                <div class="c-content">
-                    <h6>Butter Croissant</h6>
-                    <p>Flaky, golden and<br>
-                        baked fresh each morning.
-                    </p>
-                    <p class="pay">$3.75</p>
-                </div>
-            </div>
-            <div class="container extra" hidden>
-                <div class="c-img">
-                    <img src="/images/cup.jpg" alt="Iced Mocha" loading="lazy">
-                </div>
-                <div class="c-content">
-                    <h6>Iced Mocha</h6>
-                    <p>Espresso, chocolate and<br>
-                        cold milk over ice.
-                    </p>
-                    <p class="pay">$5.25</p>
-                </div>
-            </div>
-            <div class="container extra" hidden>
-                <div class="c-img">
-                    <img src="/images/Healthy Grain Bowl Ideas.jpg" alt="Chicken Sandwich" loading="lazy">
-                </div>
-                <div class="c-content">
-                    <h6>Chicken Sandwich</h6>
-                    <p>Grilled chicken, greens,<br>
-                        and house sauce.
-                    </p>
-                    <p class="pay">$10.50</p>
-                </div>
-            </div>
+        <div class="cards" id="cards" aria-live="polite">
+            <p>Loading menu...</p>
         </div>
         <button type="button" class="menu-btn" id="more-btn" aria-expanded="false">VIEW MORE</button>
     </div>
+
     <div class="logos">
         <div class="in">
             <img src="/images/cup.png" alt="">
@@ -235,16 +158,20 @@
             <img src="/images/plant.png" alt="">
             <hr class="about2-line2">
         </div>
+        <!-- TIP: change each alt below to describe what the photo really shows -->
         <div class="about-imgs">
-            <img src="/images/cuup.jpg" alt="" loading="lazy">
-            <img src="/images/download (2).jpg" alt="" loading="lazy">
-            <img src="/images/download (1).jpg" alt="" loading="lazy">
-            <img src="/images/Crusty Italian Parmesan Bread_ Dutch Oven Artisan Loaf.jpg" alt="" loading="lazy">
-            <img src="/images/cuup.jpg" alt="" loading="lazy">
+            <img src="/images/cuup.jpg" alt="Cappuccino at Bourbon St. Cafe" loading="lazy">
+            <img src="/images/download (2).jpg" alt="Bourbon St. Cafe photo 2" loading="lazy">
+            <img src="/images/download (1).jpg" alt="Bourbon St. Cafe photo 3" loading="lazy">
+            <img src="/images/Crusty Italian Parmesan Bread_ Dutch Oven Artisan Loaf.jpg" alt="Fresh baked bread" loading="lazy">
+            <img src="/images/cuup.jpg" alt="Cappuccino at Bourbon St. Cafe" loading="lazy">
         </div>
         <a class="about2-btn" href="#">FOLLOW US @BOURBONSTCAFE</a>
     </div>
-    <div class="guest-page" id="Blog">
+
+    <!-- EDIT: these three reviews are example text with US names and cities.
+         Replace them with real reviews from your real guests (with their permission). -->
+    <div class="guest-page" id="Reviews">
         <h5>WHAT OUR GUESTS SAY</h5>
         <h2>Good Coffee. Happy People.</h2>
         <div class="guest-lines">
@@ -330,8 +257,8 @@
                     <li><a href="#Menu">Menu</a></li>
                     <li><a href="#About">About Us</a></li>
                     <li><a href="#Locations">Locations</a></li>
-                    <li><a href="#Contact">Catering</a></li>
-                    <li><a href="#Blog">Blog</a></li>
+                    <li><a href="/catering.html">Catering</a></li>
+                    <li><a href="/blog.html">Blog</a></li>
                     <li><a href="#Contact">Contact</a></li>
                 </ul>
             </div>
@@ -339,20 +266,20 @@
             <div class="content3" id="Locations">
                 <h5>LOCATIONS</h5>
                 <div class="location">
-                    <p>Austin, TX</p>
-                    <span>123 Coffee Lane, Austin, TX 78701</span>
-                    <p>Denver, CO</p>
-                    <span>456 Brew Street, Denver, CO 80202</span>
-                    <p>Nashville, TN</p>
-                    <span>789 Roast Way, Nashville, TN 37203</span>
+                    <!-- SAMPLE ADDRESS (made up for testing). Replace it with your real address before you launch.
+                         For a second shop, copy the <p> and <span> pair below. -->
+                    <p>Kigali, Nyarugenge</p>
+                    <span>KN 4 Avenue, near the City Centre</span>
                 </div>
             </div>
             <hr class="footer-line">
             <div class="content4">
                 <h4>HOURS</h4>
                 <div class="hours">
+                    <!-- EDIT: check that these are your real opening hours -->
                     <p>Mon-Fri: 7:00 AM - 8:00 PM</p>
                     <p>Sat-Sun: 8:00 AM - 9:00 PM</p>
+                    <p class="open-status" id="open-status" aria-live="polite"></p>
                 </div>
                 <hr class="h-line">
                 <div class="h2r">
@@ -376,12 +303,24 @@
         <div class="footer-bottom">
             <p>&copy; 2026 Bourbon St. Cafe. All Rights Reserved.</p>
             <p>
-                <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> |
-                <a href="/admin.html" rel="nofollow">Staff Login</a>
+                <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
             </p>
         </div>
     </footer>
+
+    <!-- Back to top button -->
+    <button type="button" class="to-top" id="to-top" aria-label="Back to top"></button>
+
+    <!-- WhatsApp button.
+         TO TURN IT ON: 1) replace 250XXXXXXXXX with your number (country code, no + and no spaces)
+                        2) delete the word "hidden" from this line -->
+    <a class="wa-float" id="wa-float" href="https://wa.me/250XXXXXXXXX?text=Hello%20Bourbon%20St.%20Cafe"
+        target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp" hidden>
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
     <script src="/javascript/script.js" defer></script>
+    <script src="/javascript/extras.js" defer></script>
 </body>
 
 </html>

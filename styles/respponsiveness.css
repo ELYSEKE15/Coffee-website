@@ -144,7 +144,7 @@
     .all {
         background:
             linear-gradient(rgba(20, 15, 10, 0.85), rgba(20, 15, 10, 0.85)),
-            url("/images/coffee.jpg") center / cover no-repeat;
+            url("/images/background-img.jpg") center / cover no-repeat;
     }
 
     .hero {

@@ -1,5 +1,7 @@
 [hidden] { display: none !important; }
 
+/* The fonts (--font-heading and --font-body) are set in style.css,
+   which loads before this file, so they are shared by the whole site. */
 :root {
     --gold: #a17038;
     --gold-dark: #784d1b;
@@ -22,17 +24,18 @@ body { background: var(--cream); }
     color: #fff;
     font-size: 0.9rem;
     text-decoration: none;
+    transition: color 0.2s;
 }
 
 .o-back:hover { color: hsl(36, 48%, 56%); }
 
 .o-hero {
-    padding: 70px 20px;
+    padding: 70px 20px 60px;
     text-align: center;
     color: #fff;
     background:
         linear-gradient(rgba(20, 15, 10, 0.72), rgba(20, 15, 10, 0.72)),
-        url("/images/coffee.jpg") center / cover no-repeat;
+        url("/images/background-img.jpg") center / cover no-repeat;
 }
 
 .o-kicker {
@@ -44,9 +47,28 @@ body { background: var(--cream); }
 
 .o-hero h1 {
     margin-bottom: 10px;
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(1.8rem, 5vw, 2.8rem);
-    font-weight: 400;
+    font-family: var(--font-heading);
+    font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+    font-weight: 700;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+}
+
+/* small facts under the heading: they build trust */
+.o-facts {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.o-facts li {
+    padding: 7px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 0.82rem;
+    font-weight: 600;
 }
 
 /* ---------- layout ---------- */
@@ -60,12 +82,17 @@ body { background: var(--cream); }
     padding: 30px 20px 90px;
 }
 
-/* ---------- filter tabs ---------- */
+/* ---------- filter tabs (stay visible while scrolling the menu) ---------- */
 .o-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 5;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
+    padding: 10px 0;
+    background: var(--cream);
 }
 
 .o-tab {
@@ -76,7 +103,7 @@ body { background: var(--cream); }
     color: #444;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .o-tab:hover { border-color: var(--gold); }
@@ -98,7 +125,7 @@ body { background: var(--cream); }
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border-radius: 14px;
+    border-radius: 16px;
     background: #fff;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s, box-shadow 0.2s;
@@ -106,14 +133,18 @@ body { background: var(--cream); }
 
 .o-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.14);
 }
 
 .o-card img {
     width: 100%;
-    height: 170px;
+    height: 180px;
     object-fit: cover;
+    transition: transform 0.4s;
 }
+
+/* the photo zooms slowly inside the card, the card edges stay put (overflow: hidden) */
+.o-card:hover img { transform: scale(1.05); }
 
 .o-body {
     display: flex;
@@ -124,15 +155,16 @@ body { background: var(--cream); }
 
 .o-body h3 {
     margin-bottom: 6px;
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: 1.1rem;
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    font-weight: 700;
 }
 
 .o-body p {
     flex-grow: 1;
     margin-bottom: 14px;
-    font-size: 0.85rem;
-    line-height: 1.45;
+    font-size: 0.88rem;
+    line-height: 1.5;
     color: #666;
 }
 
@@ -140,6 +172,8 @@ body { background: var(--cream); }
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid #f0e8da;
 }
 
 .o-price {
@@ -149,16 +183,21 @@ body { background: var(--cream); }
 }
 
 .o-add {
-    padding: 8px 20px;
+    padding: 9px 22px;
     border: 0;
     border-radius: 10px;
     background: var(--gold);
     color: #fff;
     font-weight: bold;
     cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
 }
 
 .o-add:hover { background: var(--gold-dark); }
+.o-add:active { transform: scale(0.96); }
+
+/* JavaScript adds this class for a moment after a click: "Added ✓" */
+.o-add.is-added { background: #2e7d32; }
 
 .o-step {
     display: flex;
@@ -168,32 +207,48 @@ body { background: var(--cream); }
 }
 
 .o-step button {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     border: 0;
     border-radius: 50%;
     background: var(--dark);
     color: #fff;
     font-size: 1.1rem;
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .o-step button:hover { background: var(--gold-dark); }
+
+/* grey placeholder card, shown while the menu loads (JavaScript adds it) */
+.o-skel {
+    height: 290px;
+    border-radius: 16px;
+    background: linear-gradient(90deg, #eee6d8 25%, #f7f1e6 50%, #eee6d8 75%);
+    background-size: 200% 100%;
+    animation: o-shimmer 1.4s infinite linear;
+}
+
+@keyframes o-shimmer {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+}
 
 /* ---------- order summary ---------- */
 .o-cart {
     position: sticky;
     top: 16px;
     padding: 22px;
-    border-radius: 14px;
+    border-radius: 16px;
     background: #fff;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 .o-cart h2 {
     margin-bottom: 14px;
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: 1.3rem;
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 700;
 }
 
 .o-line {
@@ -206,17 +261,25 @@ body { background: var(--cream); }
 }
 
 .o-empty {
-    padding: 10px 0;
+    padding: 18px 12px;
+    border: 1px dashed #d9cdbb;
+    border-radius: 10px;
+    background: var(--cream);
     color: #888;
     font-size: 0.9rem;
+    text-align: center;
 }
 
 .o-total {
     display: flex;
     justify-content: space-between;
     margin: 14px 0 6px;
+    padding-top: 12px;
+    border-top: 2px solid #f0e8da;
     font-size: 1.1rem;
 }
+
+.o-total strong { color: var(--gold-dark); }
 
 .o-cart label {
     display: block;
@@ -239,7 +302,61 @@ body { background: var(--cream); }
 .o-cart input:focus,
 .o-cart textarea:focus {
     border-color: var(--gold);
-    outline: none;
+    outline: 2px solid rgba(161, 112, 56, 0.25);
+}
+
+/* ---------- payment choice ---------- */
+.o-pay {
+    min-width: 0;
+    margin-top: 14px;
+    padding: 0;
+    border: 0;
+}
+
+.o-pay legend {
+    padding: 0;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.o-pay-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.o-cart .o-radio {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 0;
+    padding: 8px 12px;
+    border: 1px solid #d9cdbb;
+    border-radius: 999px;
+    color: #444;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+/* the general ".o-cart input" rule makes inputs full width, so radios need their own size */
+.o-cart .o-radio input {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    accent-color: var(--gold);
+}
+
+.o-cart .o-radio:has(input:checked) {
+    border-color: var(--gold);
+    background: #faf3e8;
+}
+
+.o-cart .o-radio:has(input:focus-visible) {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
 }
 
 .o-place,
@@ -254,10 +371,13 @@ body { background: var(--cream); }
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
 }
 
 .o-place:hover,
 .o-again:hover { background: var(--gold-dark); }
+.o-place:active,
+.o-again:active { transform: scale(0.98); }
 .o-place:disabled { opacity: 0.6; cursor: wait; }
 
 .o-msg { margin-top: 10px; font-size: 0.88rem; }
@@ -298,15 +418,35 @@ body { background: var(--cream); }
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
+.o-fab:active { transform: scale(0.98); }
+
 @media (max-width: 900px) {
     .o-wrap { grid-template-columns: 1fr; }
     .o-cart { position: static; }
     .o-fab { display: block; }
     .o-top { padding: 10px 20px; }
+    .o-hero { padding: 50px 20px 44px; }
 }
+
+@media (max-width: 480px) {
+    .o-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .o-card img { height: 120px; }
+    .o-body { padding: 12px; }
+    .o-add { padding: 8px 14px; }
+}
+
 /* shown when a menu photo is missing */
 .o-card img.is-fallback {
     padding: 30px;
     background: #f3ebdd;
     object-fit: contain;
+}
+
+/* people who asked their device for less motion get no animation */
+@media (prefers-reduced-motion: reduce) {
+    .o-card,
+    .o-card img,
+    .o-skel { transition: none; animation: none; }
+    .o-card:hover { transform: none; }
+    .o-card:hover img { transform: none; }
 }

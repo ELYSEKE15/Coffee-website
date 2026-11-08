@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "seed": "node seeds.js"
+    "seed": "node seeds.js",
+    "images": "node scripts/compress-images.js"
   },
   "keywords": [],
   "author": "",
@@ -18,5 +19,11 @@
     "express-rate-limit": "^8.0.0",
     "helmet": "^8.0.0",
     "mongoose": "^9.10.3"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.5"
+  },
+  "allowScripts": {
+    "sharp@0.35.5": true
   }
 }

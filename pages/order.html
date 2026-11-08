@@ -3,10 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Order online from Bourbon St. Cafe and pick up your coffee and food without waiting in line.">
+  <meta name="theme-color" content="#1a1512">
   <title>Order Online - Bourbon St. Cafe</title>
+
+  <!-- Fonts: Fraunces (headings) and Figtree (text). These match --font-heading and --font-body in style.css -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Fraunces:wght@400;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="/styles/style.css">
   <link rel="stylesheet" href="/styles/order.css">
   <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="apple-touch-icon" href="/images/logo.png">
 </head>
 <body>
   <header class="o-top">
@@ -18,6 +27,11 @@
     <p class="o-kicker">ORDER ONLINE</p>
     <h1>Fresh coffee, ready when you arrive.</h1>
     <p>Choose your favourites and we will prepare them for pickup.</p>
+    <ul class="o-facts">
+      <li>Pay at pickup</li>
+      <li>Cash, MTN MoMo or Airtel Money</li>
+      <li>Ready in about 10-15 min</li>
+    </ul>
   </section>
 
   <main class="o-wrap">
@@ -30,15 +44,25 @@
       <div id="cart-body">
         <h2>Your order <span id="count"></span></h2>
         <div id="lines"></div>
-        <p class="o-total"><span>Total</span> <strong id="total">$0.00</strong></p>
+        <p class="o-total"><span>Total</span> <strong id="total">0 RWF</strong></p>
 
         <form id="order-form" novalidate>
           <label for="name">Your name</label>
-          <input id="name" type="text" maxlength="60" autocomplete="name" placeholder="e.g. Aline" required>
+          <input id="name" type="text" maxlength="60" autocomplete="name" placeholder="e.g. John" required>
           <label for="phone">Phone number</label>
           <input id="phone" type="tel" maxlength="16" autocomplete="tel" placeholder="+250788123456" required>
           <label for="note">Note (optional)</label>
           <textarea id="note" maxlength="200" rows="2" placeholder="Less sugar, extra hot..."></textarea>
+
+          <fieldset class="o-pay">
+            <legend>How will you pay at pickup?</legend>
+            <div class="o-pay-options">
+              <label class="o-radio"><input type="radio" name="pay" value="pickup" checked> <span>Cash</span></label>
+              <label class="o-radio"><input type="radio" name="pay" value="momo"> <span>MTN MoMo</span></label>
+              <label class="o-radio"><input type="radio" name="pay" value="airtel"> <span>Airtel Money</span></label>
+            </div>
+          </fieldset>
+
           <button type="submit" class="o-place" id="send">PLACE ORDER</button>
           <p class="o-msg" id="msg" role="status"></p>
         </form>

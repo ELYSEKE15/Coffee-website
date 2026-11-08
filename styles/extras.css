@@ -1,0 +1,206 @@
+/* Bourbon St. Cafe - extras (loads after the other stylesheets) */
+
+/* ---------- Menu bar that stays at the top ---------- */
+header.header-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    min-height: 70px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    background: rgba(26, 21, 18, 0.96);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+}
+
+@supports (backdrop-filter: blur(8px)) {
+    header.header-fixed {
+        background: rgba(26, 21, 18, 0.85);
+        backdrop-filter: blur(8px);
+    }
+}
+
+.header-fixed .logo img {
+    height: 56px;
+}
+
+/* ---------- Open now / Closed now badge ---------- */
+.hours .open-status {
+    display: inline-block;
+    margin: 4px 0 0;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    line-height: 1.4;
+}
+
+.hours .open-status:empty {
+    display: none;
+}
+
+.hours .open-status.is-open {
+    background: rgba(122, 158, 126, 0.22);
+    color: #9fd3a4;
+}
+
+.hours .open-status.is-closed {
+    background: rgba(229, 103, 90, 0.16);
+    color: #f0a198;
+}
+
+/* ---------- Back to top button (bottom left) ---------- */
+.to-top {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    z-index: 90;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border: 0;
+    border-radius: 50%;
+    background: #a17038;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.25s, transform 0.25s, visibility 0.25s, background-color 0.2s;
+}
+
+.to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+}
+
+.to-top:hover {
+    background: #784d1b;
+}
+
+/* the arrow is drawn with CSS, so no icon file is needed */
+.to-top::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    margin-top: 5px;
+    border-top: 3px solid #fff;
+    border-left: 3px solid #fff;
+    transform: rotate(45deg);
+}
+
+/* ---------- WhatsApp button (bottom right) ---------- */
+.wa-float {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 90;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #25d366;
+    color: #fff;
+    font-size: 30px;
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;
+}
+
+.wa-float:hover {
+    transform: scale(1.08);
+}
+
+.wa-float[hidden] {
+    display: none;
+}
+
+/* ---------- Menu category tabs ---------- */
+.menu-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 6px 0 10px;
+}
+
+.menu-tab {
+    padding: 9px 20px;
+    border: 1px solid #d9cdbb;
+    border-radius: 999px;
+    background: #fff;
+    color: #444;
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.menu-tab:hover {
+    border-color: #a17038;
+}
+
+.menu-tab.is-on {
+    border-color: #a17038;
+    background: #a17038;
+    color: #fff;
+}
+
+/* the "View more" button has display set above, which would override the hidden attribute */
+.menu-btn[hidden] {
+    display: none;
+}
+
+/* ---------- 404 page ---------- */
+.nf-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 100vh;
+    padding: 40px 20px;
+    text-align: center;
+    background: #1a1512;
+    color: #fff;
+}
+
+.nf-page img {
+    height: 90px;
+    width: auto;
+    object-fit: contain;
+}
+
+.nf-code {
+    font-family: var(--font-heading);
+    font-size: clamp(4rem, 16vw, 8rem);
+    font-weight: 700;
+    line-height: 1;
+    color: hsl(36, 48%, 56%);
+}
+
+.nf-page h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(1.4rem, 4vw, 2rem);
+}
+
+.nf-page p {
+    max-width: 420px;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.6;
+}
+
+.nf-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 10px;
+}

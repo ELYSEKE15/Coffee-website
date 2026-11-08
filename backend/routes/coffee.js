@@ -8,7 +8,7 @@ const router = express.Router();
 // Take only the fields we allow
 function pick(body) {
   const data = {};
-  for (const key of ["name", "price", "category", "description", "image"]) {
+  for (const key of ["name", "price", "costPrice", "category", "description", "image"]) {
     if (body[key] !== undefined) data[key] = body[key];
   }
   return data;
@@ -36,24 +36,24 @@ function isJpeg(buf) {
   return Buffer.isBuffer(buf) && buf.length > 3 && buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff;
 }
 
-// CREATE
+// CREATE (admin only)
 router.post("/", async (req, res) => {
   try {
     res.status(201).json(await Coffee.create(pick(req.body)));
   } catch (err) { fail(res, err); }
 });
 
-// READ all
+// READ all (public: the cost price must never be sent here)
 router.get("/", async (req, res) => {
   try {
-    res.json(await Coffee.find());
+    res.json(await Coffee.find().select("-costPrice"));
   } catch (err) { fail(res, err); }
 });
 
-// READ one
+// READ one (public too, so the cost is hidden here as well)
 router.get("/sort/:id", checkId, async (req, res) => {
   try {
-    const coffee = await Coffee.findById(req.params.id);
+    const coffee = await Coffee.findById(req.params.id).select("-costPrice");
     if (!coffee) return res.status(404).json({ message: "Not found" });
     res.json(coffee);
   } catch (err) { fail(res, err); }
@@ -70,7 +70,7 @@ router.get("/:id/image", checkId, async (req, res) => {
   } catch (err) { fail(res, err); }
 });
 
-// UPLOAD or replace a photo (admin only, server.js already checks the login)
+// UPLOAD or replace a photo (admin only)
 router.put("/:id/image", checkId, express.raw({ type: "image/jpeg", limit: "300kb" }), async (req, res) => {
   try {
     if (!isJpeg(req.body)) {
@@ -91,7 +91,7 @@ router.put("/:id/image", checkId, express.raw({ type: "image/jpeg", limit: "300k
   } catch (err) { fail(res, err); }
 });
 
-// UPDATE
+// UPDATE (admin only)
 router.put("/:id", checkId, async (req, res) => {
   try {
     const coffee = await Coffee.findByIdAndUpdate(req.params.id, pick(req.body), {
@@ -103,7 +103,7 @@ router.put("/:id", checkId, async (req, res) => {
   } catch (err) { fail(res, err); }
 });
 
-// DELETE
+// DELETE (admin only)
 router.delete("/delete/:id", checkId, async (req, res) => {
   try {
     const coffee = await Coffee.findByIdAndDelete(req.params.id);

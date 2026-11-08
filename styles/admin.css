@@ -313,3 +313,129 @@ select:focus {
 .a-hint { display: block; opacity: 0.7; margin-top: 0.25rem; }
 .a-latest { margin-top: 2rem; }
 .a-stat:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+
+/* ---------- reports, chart and warnings ---------- */
+.a-tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.a-tools .a-ghost {
+    margin: 0 0 14px;
+}
+
+.a-gap {
+    margin-bottom: 14px;
+}
+
+.a-warn {
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #fdecea;
+    color: #b3261e;
+    font-size: 0.9rem;
+}
+
+.a-warn-text {
+    font-weight: 600;
+    color: #b3261e;
+}
+
+.is-loss {
+    color: #b3261e;
+    font-weight: 600;
+}
+
+.a-chart-card {
+    margin: 16px 0;
+}
+
+.c-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 190px;
+    margin-top: 14px;
+}
+
+.c-col {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    height: 100%;
+    text-align: center;
+}
+
+.c-bars {
+    display: flex;
+    flex: 1;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+    min-height: 0;
+}
+
+.c-sales,
+.c-profit {
+    width: 40%;
+    max-width: 22px;
+    min-height: 2px;
+    border-radius: 4px 4px 0 0;
+}
+
+.c-sales {
+    background: #a17038;
+}
+
+.c-profit {
+    background: #2e7d32;
+}
+
+.c-col small {
+    margin-top: 6px;
+    font-size: 0.7rem;
+    color: #777;
+}
+
+.c-col.is-today small {
+    font-weight: 700;
+    color: #222;
+}
+
+.c-legend {
+    margin-top: 12px;
+    font-size: 0.82rem;
+    color: #555;
+}
+
+.c-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 0 4px 0 12px;
+    border-radius: 2px;
+}
+
+.c-dot:first-child {
+    margin-left: 0;
+}
+
+.c-dot.is-sales {
+    background: #a17038;
+}
+
+.c-dot.is-profit {
+    background: #2e7d32;
+}
+
+.a-top-title {
+    margin-top: 24px;
+}
+
+.a-top {
+    margin: 8px 0 0 20px;
+    line-height: 1.8;
+}

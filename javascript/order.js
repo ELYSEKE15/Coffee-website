@@ -2,6 +2,13 @@
 const $ = (s) => document.querySelector(s);
 const money = (n) => n.toLocaleString("en-US") + " RWF";
 
+// How the customer will pay when they come to pick up (the server only accepts these three)
+const PAY_TEXT = {
+  pickup: "Total to pay at pickup",
+  momo: "Total to pay at pickup with MTN MoMo",
+  airtel: "Total to pay at pickup with Airtel Money",
+};
+
 let coffees = [];
 let filter = "All";
 const cart = new Map(); // coffee id -> quantity
@@ -17,6 +24,17 @@ function say(text, type) {
   const msg = $("#msg");
   msg.textContent = text;
   msg.className = "o-msg " + (type || "");
+}
+
+// CHANGED: grey placeholder cards while the menu loads (the .o-skel style is already in order.css)
+function showLoading() {
+  const box = $("#items");
+  box.replaceChildren();
+  for (let i = 0; i < 6; i++) {
+    const card = el("div", "o-skel");
+    card.setAttribute("aria-hidden", "true"); // screen readers skip the empty boxes
+    box.append(card);
+  }
 }
 
 // ---------- menu ----------
@@ -98,6 +116,7 @@ function drawCart() {
 
   cart.forEach((qty, id) => {
     const coffee = coffees.find((c) => c._id === id);
+    if (!coffee) return; // CHANGED: an item removed from the menu can no longer crash the cart
     total += coffee.price * qty;
     count += qty;
     const row = el("div", "o-line");
@@ -117,12 +136,13 @@ function drawCart() {
 // ---------- load the menu ----------
 async function loadMenu() {
   const box = $("#items");
+  showLoading(); // CHANGED
   try {
     const res = await fetch("/api/coffee");
     if (!res.ok) throw new Error("Server answered " + res.status);
     coffees = await res.json();
     if (coffees.length === 0) {
-      box.replaceChildren(el("p", "", "The menu is empty. Run: npm run seed"));
+      box.replaceChildren(el("p", "", "The menu is empty. Please come back soon."));
       return;
     }
     drawTabs();
@@ -130,7 +150,8 @@ async function loadMenu() {
     drawCart();
   } catch (err) {
     console.error(err);
-    box.replaceChildren(el("p", "", "Could not load the menu. Open the site from http://localhost:3000"));
+    // CHANGED: customers should never see developer instructions
+    box.replaceChildren(el("p", "", "Could not load the menu. Please refresh the page and try again."));
   }
 }
 
@@ -138,6 +159,10 @@ async function loadMenu() {
 $("#order-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   if (cart.size === 0) return say("Please add at least one item.", "error");
+
+  // which payment choice is selected (cash is the default)
+  const chosen = document.querySelector('input[name="pay"]:checked');
+  const method = chosen ? chosen.value : "pickup";
 
   const button = $("#send");
   button.disabled = true;
@@ -151,22 +176,27 @@ $("#order-form").addEventListener("submit", async (e) => {
         name: $("#name").value,
         phone: $("#phone").value,
         note: $("#note").value,
+        paymentMethod: method,
         items: [...cart].map(([id, quantity]) => ({ id, quantity })),
       }),
     });
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.message || "Order failed");
 
+    // CHANGED: say what happens next, and use the phone number the customer typed
     const who = $("#name").value.trim();
+    const phone = $("#phone").value.trim();
     $("#done-text").textContent =
       who + ", your order #" + data.orderId.slice(-6).toUpperCase() +
-      " is received. Total to pay at pickup: " + money(data.total) + ".";
+      " is received. " + PAY_TEXT[method] + ": " + money(data.total) + ". " +
+      "We will call " + phone + " if we need to confirm anything. Please show your order number at the counter.";
     $("#cart-body").hidden = true;
     $("#done").hidden = false;
     $("#fab").hidden = true;
     cart.clear();
-    e.target.reset();
+    e.target.reset(); // also puts the payment choice back to cash
     say("");
+    $("#cart").scrollIntoView({ behavior: "smooth", block: "start" }); // CHANGED: on phones the thank-you was off screen
   } catch (err) {
     say(err.message === "Failed to fetch" ? "No connection. Try again." : err.message, "error");
   } finally {

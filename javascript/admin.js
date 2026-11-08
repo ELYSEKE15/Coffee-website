@@ -2,12 +2,14 @@
 const $ = (s) => document.querySelector(s);
 const money = (n) => Number(n).toLocaleString("en-US") + " RWF";
 const STATUSES = ["new", "preparing", "ready", "done", "cancelled"];
+const PAY = { pickup: "Cash at pickup", momo: "MTN MoMo", airtel: "Airtel Money" };
 const MAX_PHOTO = 300 * 1024; // same limit as the server
 let tab = "dash";
 let menu = [];
 let editingId = null;
 let lastNew = null; // how many new orders we saw last time, to tell the admin when one arrives
 let toastTimer;
+let audioCtx; // used for the "new order" sound
 
 function el(tag, className, text) {
     const node = document.createElement(tag);
@@ -31,6 +33,46 @@ function toast(text, bad) {
     toastTimer = setTimeout(() => (box.hidden = true), 3000);
 }
 
+// ---------- sound for new orders ----------
+// Browsers only allow sound after the admin has clicked something on the page,
+// so we get the audio ready on the first click (the login button counts).
+function unlockAudio() {
+    try {
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+    } catch { /* sound is optional, the page works without it */ }
+}
+document.addEventListener("click", unlockAudio, { once: true });
+
+// two short beeps, made by the browser itself (no sound file to download)
+function beep() {
+    if (!audioCtx || audioCtx.state !== "running") return;
+    [0, 0.3].forEach((delay) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const start = audioCtx.currentTime + delay;
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.25, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.25);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(start);
+        osc.stop(start + 0.3);
+    });
+}
+
+// Called every time we learn how many new orders are waiting.
+// A bigger number than last time means a customer just ordered: toast + sound + number in the tab title.
+function announceNew(count) {
+    if (lastNew !== null && count > lastNew) {
+        toast("New order received!");
+        beep();
+    }
+    lastNew = count;
+    document.title = (count > 0 ? "(" + count + ") " : "") + "Admin - Bourbon St. Cafe";
+}
+
 // "#A1B2C3" style short order number
 function shortId(order) {
     return "#" + order._id.slice(-6).toUpperCase();
@@ -44,6 +86,11 @@ function ago(date) {
     const hours = Math.round(mins / 60);
     if (hours < 24) return hours + " h ago";
     return new Date(date).toLocaleDateString();
+}
+
+// "2026-11-06" -> "Fri 6 Nov". Noon keeps the date from jumping because of time zones.
+function niceDay(date) {
+    return new Date(date + "T12:00:00").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
 }
 
 // One helper for every request. A 401 sends the admin back to the login screen.
@@ -130,28 +177,70 @@ function goToOrders(status) {
 }
 
 function refresh() {
-    const run = tab === "dash" ? loadStats : tab === "orders" ? loadOrders : loadMenu;
-    run().catch((err) => toast(err.message, true));
+    const loaders = { dash: loadStats, orders: loadOrders, report: loadReport, menu: loadMenu };
+    loaders[tab]().catch((err) => toast(err.message, true));
 }
 
 document.querySelectorAll(".a-tab").forEach((b) => b.addEventListener("click", () => openTab(b.dataset.tab)));
-// new orders show up by themselves every 30 seconds
-setInterval(() => { if (!$("#app").hidden && tab !== "menu") refresh(); }, 30000);
-// and right away when the admin comes back to this browser tab
-document.addEventListener("visibilitychange", () => {
-    if (!document.hidden && !$("#app").hidden && tab !== "menu") refresh();
-});
+
+// Every 30 seconds, and when the admin comes back to this browser tab:
+// - on the Dashboard, loadStats checks for new orders by itself
+// - on the Orders and Reports tabs we check the number of new orders, then reload
+// - on the Menu tab we only check the number, so a form being filled is never reset
+function poll() {
+    if ($("#app").hidden) return;
+    if (tab !== "dash") {
+        api("/api/admin/stats").then((s) => announceNew(s.newOrders)).catch(() => {});
+    }
+    if (tab !== "menu") refresh();
+}
+setInterval(poll, 30000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) poll(); });
+
+// ---------- chart ----------
+// A simple bar chart made of divs: no library to load, so the security policy stays strict.
+// Brown bar = sales, green bar = profit. The tallest sales bar sets the scale.
+function drawChart(box, days) {
+    box.replaceChildren();
+    const max = Math.max(1, ...days.map((d) => d.revenue));
+
+    days.forEach((d, index) => {
+        const sales = el("div", "c-sales");
+        sales.style.height = Math.round((d.revenue / max) * 100) + "%";
+        const profit = el("div", "c-profit");
+        profit.style.height = Math.round((Math.max(d.profit, 0) / max) * 100) + "%";
+        const bars = el("div", "c-bars");
+        bars.append(sales, profit);
+
+        // 7 days: "Fri". 30 days there is no room, so only the day number.
+        const label = days.length > 7
+            ? String(Number(d.date.slice(8)))
+            : new Date(d.date + "T12:00:00").toLocaleDateString("en-GB", { weekday: "short" });
+
+        const col = el("div", "c-col" + (index === days.length - 1 ? " is-today" : ""));
+        col.title = niceDay(d.date) + " · Sales " + money(d.revenue) + " · Profit " + money(d.profit);
+        col.append(bars, el("small", "", label));
+        box.append(col);
+    });
+}
 
 // ---------- dashboard ----------
-// Two extra blocks are made here, so admin.html stays the same.
+// Three extra blocks are made here, so admin.html stays small.
 const hello = el("p", "a-hello", "Loading…");
+const note = el("p", "a-warn", "Profit is not exact yet: some items sold have no cost price. Add it in the Menu tab.");
+note.hidden = true;
 const latest = el("div", "a-latest");
-$("#stats").before(hello);
-$("#stats").after(latest);
+$("#stats").before(hello, note);
+$("#week").after(latest);
 
 async function loadStats() {
-    // ask for both at the same time, it is faster than one after the other
-    const [s, orders] = await Promise.all([api("/api/admin/stats"), api("/api/admin/orders")]);
+    // ask for all three at the same time, it is faster than one after the other
+    const [s, orders, report] = await Promise.all([
+        api("/api/admin/stats"),
+        api("/api/admin/orders"),
+        api("/api/admin/report?days=7"),
+    ]);
+    const today = report.days[report.days.length - 1];
 
     // greeting, date and the time of the last update
     const now = new Date();
@@ -161,19 +250,19 @@ async function loadStats() {
         now.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }) +
         " · Updated " + now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-    // tell the admin when a new order arrives, and show the count in the browser tab title
-    if (lastNew !== null && s.newOrders > lastNew) toast("New order received!");
-    lastNew = s.newOrders;
-    document.title = (s.newOrders > 0 ? "(" + s.newOrders + ") " : "") + "Admin - Bourbon St. Cafe";
+    // toast + sound when a new order arrives, and the count in the browser tab title
+    announceNew(s.newOrders);
+    note.hidden = report.missingCost === 0;
 
     // number cards. A card with an action opens the right tab when clicked.
     const box = $("#stats");
     box.replaceChildren();
     [
-        ["📅", "Orders today", s.todayOrders, "since midnight", false, null],
         ["🔔", "New orders waiting", s.newOrders, s.newOrders > 0 ? "click to open them" : "all caught up", s.newOrders > 0, () => goToOrders("new")],
-        ["🧾", "All orders", s.orders, "click to see them", false, () => goToOrders("")],
-        ["💰", "Sales (done orders)", money(s.sales), "finished orders only", false, null],
+        ["📅", "Orders today", s.todayOrders, "all statuses", false, null],
+        ["💰", "Sales today", money(today.revenue), "finished orders only", false, null],
+        ["📈", "Profit today", money(today.profit), "sales minus cost", false, () => openTab("report")],
+        ["🗓️", "Profit, last 7 days", money(report.totals.profit), money(report.totals.revenue) + " in sales", false, () => openTab("report")],
         ["☕", "Menu items", s.items, "click to edit the menu", false, () => openTab("menu")],
     ].forEach(([icon, label, value, hint, alert, open]) => {
         const card = el("div", "a-stat" + (alert ? " is-alert" : ""));
@@ -187,6 +276,8 @@ async function loadStats() {
         }
         box.append(card);
     });
+
+    drawChart($("#week-chart"), report.days);
 
     // the 5 latest orders, so the admin sees activity without opening the Orders tab
     latest.replaceChildren(el("h3", "", "Latest orders"));
@@ -259,6 +350,8 @@ async function loadOrders() {
 
         const who = el("div");
         who.append(el("strong", "", o.customerName), el("small", "", o.phone));
+        // orders made before the payment choice existed have no paymentMethod, so show cash
+        who.append(el("small", "", "Pays: " + (PAY[o.paymentMethod] || PAY.pickup)));
         if (o.note) who.append(el("small", "", "Note: " + o.note));
 
         // "5 min ago" on top, the full date and time below it
@@ -279,16 +372,75 @@ async function loadOrders() {
 }
 $("#filter").addEventListener("change", refresh);
 
+// ---------- reports ----------
+async function loadReport() {
+    const days = $("#range").value; // only "7" or "30", and the server checks it again
+    const r = await api("/api/admin/report?days=" + days);
+    const t = r.totals;
+
+    $("#report-note").hidden = r.missingCost === 0;
+    $("#report-note").textContent =
+        "Profit is not exact yet: " + r.missingCost + " items sold have no cost price. Add it in the Menu tab.";
+
+    // totals for the chosen period
+    const stats = $("#report-stats");
+    stats.replaceChildren();
+    [
+        ["Sales", money(t.revenue)],
+        ["Cost", money(t.cost)],
+        ["Profit", money(t.profit)],
+        ["Finished orders", t.orders],
+    ].forEach(([label, value]) => {
+        const card = el("div", "a-stat");
+        card.append(el("span", "", label), el("strong", "", String(value)));
+        stats.append(card);
+    });
+
+    drawChart($("#chart"), r.days);
+
+    // newest day first, because that is the one the owner looks at most
+    const body = $("#report-rows");
+    body.replaceChildren();
+    [...r.days].reverse().forEach((d) => {
+        const row = el("tr");
+        row.append(
+            cell(niceDay(d.date)),
+            cell(String(d.orders)),
+            cell(money(d.revenue)),
+            cell(money(d.cost)),
+            cell(el("span", d.profit < 0 ? "is-loss" : "", money(d.profit))),
+        );
+        body.append(row);
+    });
+
+    // best sellers in the same period
+    $("#top-title").textContent = "Best sellers, last " + days + " days";
+    const list = $("#top-list");
+    list.replaceChildren();
+    if (r.top.length === 0) {
+        list.replaceChildren(el("li", "", "No finished orders in this period."));
+        return;
+    }
+    r.top.forEach((item) => list.append(el("li", "", item.name + " · " + item.qty + " sold")));
+}
+$("#range").addEventListener("change", refresh);
+
+// The server makes the CSV file, the browser just opens the link and downloads it.
+$("#csv").addEventListener("click", () => {
+    window.location.href = "/api/admin/report.csv?days=" + $("#range").value;
+});
+
 // ---------- menu ----------
 async function loadMenu() {
-    menu = await api("/api/coffee");
+    // CHANGED: the public /api/coffee hides cost prices, so the admin reads the full menu from here
+    menu = await api("/api/admin/menu");
     const body = $("#menu");
     body.replaceChildren();
 
     if (menu.length === 0) {
         const row = el("tr");
         const td = cell("No items yet. Add your first item above.");
-        td.colSpan = 5;
+        td.colSpan = 7;
         row.append(td);
         body.append(row);
         return;
@@ -316,8 +468,13 @@ async function loadMenu() {
         const actions = el("div");
         actions.append(edit, del);
 
+        // items saved before cost prices existed have none: show it in red so the admin fixes it
+        const hasCost = typeof item.costPrice === "number";
+        const costCell = hasCost ? cell(money(item.costPrice)) : cell(el("span", "a-warn-text", "Not set"));
+        const profitCell = hasCost ? cell(money(item.price - item.costPrice)) : cell("-");
+
         const row = el("tr");
-        row.append(cell(img), cell(item.name), cell(item.category), cell(money(item.price)), cell(actions));
+        row.append(cell(img), cell(item.name), cell(item.category), cell(money(item.price)), costCell, profitCell, cell(actions));
         body.append(row);
     });
 }
@@ -374,6 +531,7 @@ function startEdit(item) {
     editingId = item._id;
     $("#m-name").value = item.name;
     $("#m-price").value = item.price;
+    $("#m-cost").value = typeof item.costPrice === "number" ? item.costPrice : "";
     $("#m-cat").value = item.category;
     $("#m-image").value = item.image || "";
     $("#m-preview").src = item.image || "";
@@ -400,10 +558,14 @@ $("#menu-form").addEventListener("submit", async (e) => {
     const payload = {
         name: $("#m-name").value,
         price: Number($("#m-price").value),
+        costPrice: Number($("#m-cost").value),
         category: $("#m-cat").value,
         image: $("#m-image").value,
         description: $("#m-desc").value,
     };
+
+    // a cost higher than the price means a loss on every sale, so make the admin confirm it
+    if (payload.costPrice > payload.price && !confirm("The cost is higher than the selling price. Save anyway?")) return;
 
     // lock the button while saving, so a double click can't create the item twice
     const save = $("#m-save");
